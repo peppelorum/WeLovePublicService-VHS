@@ -1,0 +1,51 @@
+info it worked if it ends with ok
+verbose cli [ 'node', '/usr/local/bin/npm', 'install', 'bower', '-g' ]
+info using npm@1.1.15
+info using node@v0.6.14
+verbose /usr/local/bin/node node symlink
+verbose config file /Users/peppe/.npmrc
+verbose config file /usr/local/etc/npmrc
+verbose config file /usr/local/lib/node_modules/npm/npmrc
+verbose cache add [ 'bower', null ]
+silly cache add: name, spec, args [ undefined, 'bower', [ 'bower', null ] ]
+verbose parsed url { pathname: 'bower', path: 'bower', href: 'bower' }
+verbose addNamed [ 'bower', '' ]
+verbose addNamed [ null, '' ]
+silly name, range, hasData [ 'bower', '', false ]
+verbose raw, before any munging bower
+verbose url resolving [ 'https://registry.npmjs.org/', './bower' ]
+verbose url resolved https://registry.npmjs.org/bower
+verbose etag "8FO2CXFAGGWU8GE649Y56S4PA"
+http GET https://registry.npmjs.org/bower
+http 304 https://registry.npmjs.org/bower
+silly get cb [ 304,
+silly get cb   { server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+silly get cb     etag: '"8FO2CXFAGGWU8GE649Y56S4PA"',
+silly get cb     date: 'Fri, 28 Dec 2012 19:53:44 GMT',
+silly get cb     'content-length': '0' } ]
+verbose etag bower from cache
+silly name, range, hasData 2 [ 'bower', '', true ]
+silly versions [ 'bower', [] ]
+ERR! Error: No compatible version found: bower
+ERR! No valid targets found.
+ERR! Perhaps not compatible with your version of node?
+ERR!     at installTargetsError (/usr/local/lib/node_modules/npm/lib/cache.js:486:10)
+ERR!     at next_ (/usr/local/lib/node_modules/npm/lib/cache.js:436:17)
+ERR!     at next (/usr/local/lib/node_modules/npm/lib/cache.js:413:44)
+ERR!     at /usr/local/lib/node_modules/npm/lib/cache.js:406:5
+ERR!     at saved (/usr/local/lib/node_modules/npm/lib/utils/npm-registry-client/get.js:151:7)
+ERR!     at Object.oncomplete (/usr/local/lib/node_modules/npm/node_modules/graceful-fs/graceful-fs.js:230:7)
+ERR! You may report this log at:
+ERR!     <http://github.com/isaacs/npm/issues>
+ERR! or email it to:
+ERR!     <npm-@googlegroups.com>
+ERR! 
+ERR! System Darwin 12.2.0
+ERR! command "node" "/usr/local/bin/npm" "install" "bower" "-g"
+ERR! cwd /Users/peppe/Dev/Privat/svtsave/svtsave/core/static
+ERR! node -v v0.6.14
+ERR! npm -v 1.1.15
+ERR! message No compatible version found: bower
+ERR! message No valid targets found.
+ERR! message Perhaps not compatible with your version of node?
+verbose exit [ 1, true ]

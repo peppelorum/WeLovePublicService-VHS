@@ -1,0 +1,31 @@
+{% extends 'popup.html' %}
+
+{% load url from future %}
+
+{% block content %}
+    <h1>
+        Dina avsnitt som spelas/spelats in
+    </h1>
+
+    <p>
+        Lägg till <a href="{% url 'rss' profile.unique %}">denna personliga RSS-URL</a> i din bittorrentklient för att göra all nedladdning automatisk.
+    </p>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Avsnitt</th>
+            <th>Torrent</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in notifications %}
+            <tr>
+                <td><a href="{{ item.right.url }}">{{ item.right.title }}</a></td>
+                <td><a href="{{ item.left.torrent_url }}">Download</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'popup.html' %}
+{% load bootstrap_toolkit %}
+{% load url from future %}
+
+
+{% block content %}
+    <p>
+        {{ object }}
+    </p>
+
+
+
+
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form|as_bootstrap }}
+
+        <div class="actions">
+            <button type="submit" class="btn primary">Logga in</button>
+        </div>
+    </form>
+
+{% endblock %}

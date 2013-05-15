@@ -1,0 +1,32 @@
+django>=1.4
+requests
+#BeautifulSoup4
+simplejson
+redis
+#BeautifulSoup
+south
+django-annoying
+django-extensions
+django-bootstrap-toolkit
+django-apptemplates
+boto
+fabric
+dj-database-url
+gunicorn
+psycopg2
+django-debug-toolbar
+johnny-cache
+django-redis-cache
+pil
+django-tastypie
+rq
+#pyquery
+django-notifications-hq
+django-model-utils
+django-jsonfield
+rethinkdb
+jsonpickle
+delorean
+fabtools
+#-e git+https://github.com/peppelorum/SvtCrawler.git@master#egg=svtcrawler
+#-e git+https://github.com/dparlevliet/rwrapper.git#egg=rwrapper

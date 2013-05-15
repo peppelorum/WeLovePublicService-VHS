@@ -1,0 +1,4 @@
+django: python svtsave/manage.py runserver 0.0.0.0:8000
+celeryd: python svtsave/manage.py celeryd -l INFO
+worker1: python svtsave/manage.py celery worker --loglevel=info --concurrency=1 -n worker1.wlps
+worker2: python svtsave/manage.py celery worker --loglevel=info --concurrency=1 -n worker2.wlps

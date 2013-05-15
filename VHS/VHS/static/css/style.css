@@ -1,0 +1,38 @@
+
+body {
+    background: url('../images/bg.png') repeat-x;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: 300;
+    color: #333;
+    font-size: 0.8rem;
+}
+
+a {
+    color: #4aa01f;
+}
+
+h1 {
+    font-size: 30px;
+    line-height: 32px;
+}
+
+
+.row.logo {
+    padding: 10px;
+}
+
+.content ul.group {
+    -webkit-column-count: 3;
+}
+
+.content ul.group li {
+    /*float*/
+}
+
+.content li {
+    list-style-type: circle;
+}
+
+.content li.downloaded {
+    list-style-type: square;
+}

@@ -1,0 +1,86 @@
+{% load url from future %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Min snygga titel{% endblock %}</title>
+    <!-- Bootstrap -->
+    <link href="{{ STATIC_URL }}bootstrap2/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" media="screen">
+
+    {% block extrahead %}
+
+        <script src="{{ STATIC_URL }}js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+        <script type="text/javascript">
+
+            $(document).ready(function() {
+                $('.ep_get').click(function(evt) {
+
+                    console.log('sad', $(this).attr('href'));
+                    $.get($(this).attr('href'), function(data) {
+                        console.log('data', data);
+                        if (data['Exists'] === 'No') {
+                            alert('Hmm, filen saknas, den är nu lagd i nedladdningskön igen\noch du kommer få en ny notis när den är nedladdad')
+                            evt.preventDefault();
+                        } else {
+                            location.href = data['Link'];
+                        }
+                    });
+                    console.log('check', this);
+                    return false;
+                });
+            });
+
+        </script>
+
+    {% endblock %}
+</head>
+<body>
+
+<div class="container">
+
+
+    <div class="row logo">
+        <div class="span12">
+            <img src="{{ STATIC_URL }}images/logo.png">
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="span12">
+            {% if user.is_authenticated %}
+            <ul class="nav nav-pills">
+                <li><a href="{% url 'profile_detail' %}">Dina prenumerationer</a></li>
+                <li><a href="{% url 'show_list' %}">TV-program</a></li>
+                <li><a href="{% url 'status' %}">Status</a></li>
+                <li><a href="{% url 'notifications:all' %}">Inbox</a></li>
+{#                <li><a href="{% url 'socialauth_begin' 'twitter' %}?{{ redirect_querystring }}">Login</a></li>#}
+                <li><a href="{% url 'logout' %}">Log out</a></li>
+{#                <li><a href="{% url 'index' %}">List all</a></li>#}
+{#                <li><a href="{% url 'add' %}">Add</a></li>#}
+            </ul>
+
+            {% else %}
+                <ul class="nav nav-pills">
+                    <li><a href="{% url 'login' %}">Logga in</a></li>
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+
+
+
+    <div class="row content">
+        {#    <div class="span4"></div>#}
+        <div class="span12">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+</div>
+
+<script src="{{ STATIC_URL }}bootstrap2/js/bootstrap.min.js"></script>
+</body>
+</html>
