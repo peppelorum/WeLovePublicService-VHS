@@ -9,7 +9,7 @@ from django.template import RequestContext
 
 from django.contrib.auth.models import User
 
-from libs.rwrapper import rwrapper
+# from libs.rwrapper import rwrapper
 
 import rethinkdb as r
 from rethinkdb.errors import RqlRuntimeError, RqlDriverError
