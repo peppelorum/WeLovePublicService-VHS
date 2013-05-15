@@ -12,6 +12,5 @@ urlpatterns = patterns('',
     url(r'^feed/(?P<key>[a-z0-9]+)/$', 'video.views.rss', name='rss'),
     url(r'$', 'video.views.start', name='start'),
 
-    url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='login'),
-    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'template_name': 'registration/logout.html'}, name='logout'),
+
 )
