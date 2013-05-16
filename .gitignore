@@ -2,3 +2,4 @@
 .idea
 VHS/rehinkdb_data
 rq_settings.py
+local_settings.py
