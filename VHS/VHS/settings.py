@@ -252,7 +252,7 @@ LOGGING = {
 
 RQ_DEPLOY_PATH = 'ost'
 RQ_IMPORTS = (
-    ['core/tasks.py', 'core/tasks.py'],
+    ['video/tasks.py', 'video/tasks.py'],
     ['libs/*.py', 'libs/'],
     ['deploy/startrq.py', 'startrq.py'],
 
