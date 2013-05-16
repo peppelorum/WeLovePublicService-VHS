@@ -6,11 +6,13 @@
         <link>http://vhs.welovepublicservice.se/</link>
         <description>Free web building tutorials</description>
         {% for item in notifications %}
+            {% if item.left.torrent_url %}
             <item>
                 <title>{{ item.right.title }}</title>
                 <link>{{ item.left.torrent_url }}</link>
                 <description>{{ item.right.title }}</description>
             </item>
+            {% endif %}
         {% endfor %}
     </channel>
 
