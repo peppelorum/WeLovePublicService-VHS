@@ -30,8 +30,8 @@ class SvtGet():
 
         for episode in items:
 
-            print episode
-            # r.table('episode').get(episode['id']).update({'state': 2}).run(conn)
+            # print episode
+            r.table('episode').get(episode['id']).update({'state': 2}).run(conn)
             # print episode
 
 
