@@ -3,7 +3,7 @@ requests
 #BeautifulSoup4
 simplejson
 redis
-#BeautifulSoup
+BeautifulSoup
 south
 django-annoying
 django-extensions
