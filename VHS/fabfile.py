@@ -39,8 +39,9 @@ env.roledefs = {
 @task
 @roles('web')
 def web_setup_user():
-    user = env.user
-    env.user = 'root'
+    # user = env.user
+    env.user = 'wlps'
+    user = prompt('Enter a new username:')
     password = prompt('Enter a new password for user %s:' % user)
     require.user(user, shell='/bin/bash', password=password)
     fabtools.require.users.sudoer(user, hosts='ALL', operators='ALL', passwd=False, commands='ALL')
@@ -71,7 +72,6 @@ def web_setup():
         'libpq-dev',
         'libxml2-dev',
         'libxslt1-dev',
-#        'redis-server'
     ])
 
     install('gcc')
@@ -81,8 +81,21 @@ def web_setup():
         if not files.contains('sources.list', 'http://packages.dotdeb.org'):
             sudo('echo deb http://packages.dotdeb.org squeeze all >> sources.list')
 
+        if not files.contains('sources.list', 'rethinkdb'):
+            sudo('echo deb http://ppa.launchpad.net/rethinkdb/ppa/ubuntu lucid main >> sources.list')
+
+
+    install('rethinkdb')
+
+    #
+    # deb http://ppa.launchpad.net/rethinkdb/ppa/ubuntu lucid main
+    # deb-src http://ppa.launchpad.net/rethinkdb/ppa/ubuntu lucid main
+
     run('wget http://www.dotdeb.org/dotdeb.gpg')
     run('cat dotdeb.gpg | sudo apt-key add -')
+
+    # run('gpg --keyserver pgpkeys.mit.edu --recv-key 135D945A11D62AD6')
+    # run('gpg -a --export 135D945A11D62AD6 | apt-key add -')
 
     db = prompt('Enter a new database:')
     user = prompt('Enter a new username:')
@@ -219,6 +232,9 @@ def get_key():
 @task
 @roles('ffmpeg')
 def worker_deploy():
+
+    env.user = 'wlps'
+
     with virtualenv(django_settings.RQ_DEPLOY_PATH):
 
         for item in django_settings.RQ_PIP:
