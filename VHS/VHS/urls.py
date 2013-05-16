@@ -7,15 +7,6 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'svtsave.views.home', name='home'),
-    url(r'^', include('video.urls')),
-
-    # url(
-    #     regex=r"^episode/callback/$",
-    #     view=EpisodeCallback,
-    #     name="ep_callback",
-    # ),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
@@ -26,5 +17,6 @@ urlpatterns = patterns('',
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='login'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', name='logout'),
 
+    url(r'^', include('video.urls')),
 
 )
