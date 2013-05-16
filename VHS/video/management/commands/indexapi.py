@@ -8,6 +8,12 @@ def index():
 
     import rethinkdb as r
     r.connect('localhost', 28015).repl()
+
+    try:
+        r.db_create('wlps').run()
+    except RqlRuntimeError:
+        pass
+
     try:
         r.db('wlps').table_create('episode').run()
     except RqlRuntimeError:
