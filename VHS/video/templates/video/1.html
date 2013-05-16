@@ -22,7 +22,7 @@
         {% for item in notifications %}
             <tr>
                 <td><a href="{{ item.right.url }}">{{ item.right.title }}</a></td>
-                <td><a href="{{ item.left.torrent_url }}">Download</a></td>
+                <td>{% if item.left.torrent_url %}<a href="{{ item.left.torrent_url }}">Download</a>{% endif %}</td>
             </tr>
         {% endfor %}
         </tbody>
