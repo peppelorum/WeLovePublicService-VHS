@@ -135,7 +135,7 @@ def rss(request, key):
         'notifications': notifications
     }
 
-    return render_to_response('video/rss.html', dic)
+    return render_to_response('video/rss.html', dic, content_type='application/rss+xml')
 
 #
 # from django.contrib.syndication.views import Feed
