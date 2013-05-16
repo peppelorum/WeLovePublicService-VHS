@@ -91,6 +91,10 @@ def get(request):
 @csrf_exempt
 def callback(request):
     req_id = request.POST.get('id')
+    key = request.POST.get('key')
+
+    if key != get_config('CALLBACKKEY', ''):
+        return HttpResponse('Nay....')
 
     conn = r.connect('localhost', 28015, 'wlps')
 
@@ -104,7 +108,6 @@ def callback(request):
 
     for a in episodes:
         print a
-
 
     return HttpResponse('Yay!')
 

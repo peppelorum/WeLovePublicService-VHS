@@ -265,6 +265,7 @@ RQ_SETTINGS_NEEDED = (
     'BUCKET',
     'BROKER_HOST',
     'BROKER_PORT',
+    'CALLBACKKEY'
 )
 RQ_PIP = ('requests', 'BeautifulSoup', 'simplejson', 'django-annoying', 'boto', 'rq', )
 DJANGO_SETTINGS_MODULE = 'VHS.settings'

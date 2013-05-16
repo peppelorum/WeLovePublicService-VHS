@@ -142,7 +142,7 @@ class Pirateget():
 
         self.getVideo(url, pk, filename)
 
-        sent = requests.post(callback_url, data={'id': pk})
+        sent = requests.post(callback_url, data={'id': pk, 'key': get_config('CALLBACKKEY', '')})
         print 'Callback:', sent
 
         return True
