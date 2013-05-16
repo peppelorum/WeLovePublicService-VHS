@@ -1,12 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-    <author>Author's name</author>
-    <title>Feed title</title>
-    {% for item in notifications %}
-    <entry>
-        <title>{{ item.right.title }}</title>
-        <link href="{{ item.left.torrent_url }}"/>
-{#        <content type="html">{{ item }}</content>#}
-    </entry>
-    {%endfor%}
-</feed>
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<rss version="2.0">
+
+    <channel>
+        <title>We Love Public Service - VHS</title>
+        <link>http://vhs.welovepublicservice.se/</link>
+        <description>Free web building tutorials</description>
+        {% for item in notifications %}
+            <item>
+                <title>{{ item.right.title }}</title>
+                <link>{{ item.left.torrent_url }}</link>
+                <description>{{ item.right.title }}</description>
+            </item>
+        {% endfor %}
+    </channel>
+
+</rss>
