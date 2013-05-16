@@ -94,17 +94,11 @@ def callback(request):
 
     conn = r.connect('localhost', 28015, 'wlps')
 
-    print 'REQ', req_id
-
     item = r.table('episode').get(req_id).run(conn)
-
-    # print 'item', item
 
     notif_json = {
         'torrent_url': get_config('GS_URL', '') % (get_config('BUCKET', ''), item['title_slug'] + '.mp4?torrent')
     }
-
-    print notif_json
 
     episodes = r.table('notifications').filter({'episode_id': req_id}).update(notif_json).run(conn)
 
