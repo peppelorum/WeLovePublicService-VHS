@@ -10,12 +10,12 @@
 
 import os
 import sys
+import random
 
 from BeautifulSoup import BeautifulSoup
 import requests
 import simplejson
 
-import boto
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from optparse import OptionParser
@@ -40,8 +40,17 @@ def get_config(key, default):
 
 
 class Pirateget():
+    """
+    Purpose of class:
+    - Get m3u of episode from SVT Play
+    - Save the HLS stream to MP4
+    - Upload to AWS S3
+    """
 
     def which(self, program):
+        """
+        A python port for the unix command which
+        """
         def is_exe(fpath):
             return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
@@ -66,17 +75,17 @@ class Pirateget():
             sys.exit()
 
     def getVideo(self, url, tempfilename, filename):
+        """
+        Do the actually downloading and upload the file to AWS S3
+        """
         BUCKET = get_config('BUCKET', '')
         GOOGLE_STORAGE = get_config('GOOGLE_STORAGE', '')
         GS_KEY = get_config('GS_KEY', '')
         GS_SECRET = get_config('GS_SECRET', '')
 
-        tempfilename = 'tmp'
+        tempfilename = str(random.randrange(1, 60000))
 
-#        filename = unicodedata.normalize('NFKD', filename).encode('ascii','ignore')
-#        command = 'ffmpeg -i \"%s\" -acodec copy -vcodec copy -absf aac_adtstoasc -y "%s.mp4"' % (url, filename)
-
-        # print 'filename', unicode(filename)
+#        command = 'ffmpeg -i \"%s\" -acodec copy -vcodec copy -absf aac_adtstoasc -y "%s.mp4"' % (url, filename)   # Old command, save for future reference
         command = 'ffmpeg -i \"%s\" -y "%s.mp4"' % (url, tempfilename)
         print command
         os.system(command)
@@ -91,21 +100,20 @@ class Pirateget():
         k.set_contents_from_filename(tempfilename)
         k.make_public()
 
-        os.remove('tmp.mp4')
+        os.remove('%s.mp4' % tempfilename)
 
     def sort_by_age(self, d):
-        '''a helper function for sorting'''
+        """a helper function for sorting"""
+
         try:
             import re
             quality = re.sub('[^0-9]', '', d['meta']['quality'].split('x')[0])
             return int(quality)
         except KeyError as inst:
             print('ERROR: %s' % inst)
-#            logger.error('d: %s' % d)
             return inst
 
     def run(self, pk, title, url, folder, callback_url):
-    # def run(self, id_, title,  url, path, filename, callback_url):
 
         filename = title
 
