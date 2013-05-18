@@ -115,7 +115,7 @@ def callback(request):
 
     r.table('episode').get(item['id']).update({'state': state}).run(conn)
 
-    if state == 3:
+    if state == 4:
 
         notif_json = {
             'torrent_url': get_config('GS_URL', '') % (get_config('BUCKET', ''), item['title_slug'] + '.mp4?torrent')
