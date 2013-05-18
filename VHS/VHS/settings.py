@@ -21,8 +21,8 @@ try:
     BROKER_HOST = os.environ['BROKER_HOST']
     BROKER_PORT = os.environ['BROKER_PORT']
     # SESSION_COOKIE_DOMAIN = os.environ['SESSION_COOKIE_DOMAIN']
-    GS_KEY = os.environ['GS_KEY']
-    GS_SECRET = os.environ['GS_SECRET']
+    # GS_KEY = os.environ['GS_KEY']
+    # GS_SECRET = os.environ['GS_SECRET']
 except IndexError:
     print '*********************************************************'
     print 'You need to define GS_KEY and GS_SECRET as env variables.'
