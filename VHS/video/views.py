@@ -15,6 +15,8 @@ from django.contrib.auth.models import User
 import rethinkdb as r
 from rethinkdb.errors import RqlRuntimeError, RqlDriverError
 
+import requests
+
 from annoying.functions import get_config
 
 from models import Profile
@@ -52,6 +54,17 @@ def get(request):
     # for a in items:
     #     print a
 
+    episode_exists = r.table('episode').filter(lambda item: item.contains('url')).filter({'url': url}).count().run(conn)
+
+    if episode_exists == 0:
+        urlbase = 'http://api.welovepublicservice.se/'
+        tmpurl = urlbase + 'v1/episode/?url=%s' % (url)
+
+        req = requests.get(tmpurl)
+        allt = req.json()
+
+        for obj in allt['objects']:
+            a = r.db('wlps').table('episode').insert(obj).run()
 
     try:
         item = r.table('episode').filter(lambda item: item.contains('url')).filter({'url': url}).nth(0).run(conn)
