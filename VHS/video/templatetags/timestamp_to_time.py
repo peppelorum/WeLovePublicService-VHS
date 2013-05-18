@@ -16,7 +16,9 @@ def convert_int_to_boostraptable(num):
 
     num = int(num)
 
-    if num == 1:
-        return 'warning'
     if num == 2:
+        return 'warning'
+    if num == 3:
         return 'success'
+
+    return ''
