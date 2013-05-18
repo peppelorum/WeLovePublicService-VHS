@@ -83,16 +83,15 @@ class Pirateget():
         GS_KEY = get_config('GS_KEY', '')
         GS_SECRET = get_config('GS_SECRET', '')
 
-        tempfilename = str(random.randrange(1, 60000))
+        tempfilename = str(random.randrange(1, 60000)) + '.mp4'
 
 #        command = 'ffmpeg -i \"%s\" -acodec copy -vcodec copy -absf aac_adtstoasc -y "%s.mp4"' % (url, filename)   # Old command, save for future reference
-        command = 'ffmpeg -i \"%s\" -y "%s.mp4"' % (url, tempfilename)
+        command = 'ffmpeg -i \"%s\" -y "%s"' % (url, tempfilename)
         print command
         os.system(command)
 
         filename_gs = filename.split('/')[-1] + '.mp4'
         filename += '.mp4'
-        tempfilename += '.mp4'
         conn = S3Connection(GS_KEY, GS_SECRET)
         bucket = conn.get_bucket('wlps')
         k = Key(bucket)
@@ -100,7 +99,7 @@ class Pirateget():
         k.set_contents_from_filename(tempfilename)
         k.make_public()
 
-        os.remove('%s.mp4' % tempfilename)
+        os.remove(tempfilename)
 
     def sort_by_age(self, d):
         """a helper function for sorting"""
