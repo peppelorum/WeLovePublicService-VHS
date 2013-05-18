@@ -53,8 +53,6 @@ def get(request):
 
 
     try:
-        # item = Episode(url=url).all(Episode)
-
         item = r.table('episode').filter(lambda item: item.contains('url')).filter({'url': url}).nth(0).run(conn)
 
         r.table('episode').get(item['id']).update({'state': 1}).run(conn)
@@ -62,13 +60,12 @@ def get(request):
         notif_json = {
             'episode_id': item['id'],
             'user_id': int(request.user.id)
-
         }
 
         exists = int(r.table('notifications').filter(notif_json).count().run(conn))
 
         if exists == 0:
-            notif_json.update({ 'date_added': int(time.time()) })
+            notif_json.update({'date_added': int(time.time())})
             r.table('notifications').insert(
                 notif_json
             ).run(conn)
@@ -88,6 +85,21 @@ def get(request):
     return redirect('start')
 
 
+def stats(request):
+    conn = r.connect('localhost', 28015, 'wlps')
+
+    notifications = r.table('notifications').eq_join('episode_id', r.table('episode')).run(conn)
+
+    dic = {
+        'notifications': notifications
+    }
+
+    return render_to_response(
+        'video/stats.html',
+        dic,
+        context_instance=RequestContext(request))
+
+
 @csrf_exempt
 def callback(request):
     req_id = request.POST.get('id')
@@ -99,6 +111,8 @@ def callback(request):
     conn = r.connect('localhost', 28015, 'wlps')
 
     item = r.table('episode').get(req_id).run(conn)
+
+    r.table('episode').get(item['id']).update({'state': 3}).run(conn)
 
     notif_json = {
         'torrent_url': get_config('GS_URL', '') % (get_config('BUCKET', ''), item['title_slug'] + '.mp4?torrent')
