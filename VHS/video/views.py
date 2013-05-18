@@ -69,29 +69,29 @@ def get(request):
     try:
         item = r.table('episode').filter(lambda item: item.contains('url')).filter({'url': url}).nth(0).run(conn)
 
-        if hasattr(item, 'state'):
-            if item['state'] == 4:
-                notif_json = {
-                    'episode_id': item['id'],
-                    'user_id': int(request.user.id),
-                    'torrent_url': get_config('GS_URL', '') % (get_config('BUCKET', ''), item['title_slug'] + '.mp4?torrent')
-                }
-
-        else:
-            r.table('episode').get(item['id']).update({'state': 1}).run(conn)
-
-            notif_json = {
-                'episode_id': item['id'],
-                'user_id': int(request.user.id)
-            }
-
+        notif_json = {
+            'episode_id': item['id'],
+        }
         exists = int(r.table('notifications').filter(notif_json).count().run(conn))
 
         if exists == 0:
-            notif_json.update({'date_added': int(time.time())})
-            r.table('notifications').insert(
-                notif_json
-            ).run(conn)
+            r.table('episode').get(item['id']).update({'state': 1}).run(conn)
+
+        notif_json.update(
+            {
+                'date_added': int(time.time()),
+                'user_id': int(request.user.id)
+            })
+
+        if hasattr(item, 'state'):
+            if item['state'] == 4:
+                notif_json.update(
+                    {
+                        'torrent_url': get_config('GS_URL', '') % (get_config('BUCKET', ''), item['title_slug'] + '.mp4?torrent'),
+                    }
+                )
+
+        r.table('notifications').insert(notif_json).run(conn)
 
     except ValueError as err:
         # item = 's'
