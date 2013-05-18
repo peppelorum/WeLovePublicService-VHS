@@ -13,6 +13,11 @@ except:
     print 'ENV_FILE is missing'
 
 try:
+    from local_settings import *
+except:
+    pass
+
+try:
     BROKER_HOST = os.environ['BROKER_HOST']
     BROKER_PORT = os.environ['BROKER_PORT']
     # SESSION_COOKIE_DOMAIN = os.environ['SESSION_COOKIE_DOMAIN']
