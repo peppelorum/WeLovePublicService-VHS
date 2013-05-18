@@ -104,7 +104,7 @@ def stats(request):
 def callback(request):
     req_id = request.POST.get('id')
     key = request.POST.get('key')
-    state = request.POST.get('state')
+    state = int(request.POST.get('state'))
 
     if key != get_config('CALLBACKKEY', ''):
         return HttpResponse('Nay....')
