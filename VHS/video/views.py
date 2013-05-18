@@ -69,12 +69,13 @@ def get(request):
     try:
         item = r.table('episode').filter(lambda item: item.contains('url')).filter({'url': url}).nth(0).run(conn)
 
-        if item['state'] == 4:
-            notif_json = {
-                'episode_id': item['id'],
-                'user_id': int(request.user.id),
-                'torrent_url': get_config('GS_URL', '') % (get_config('BUCKET', ''), item['title_slug'] + '.mp4?torrent')
-            }
+        if hasattr(item, 'state'):
+            if item['state'] == 4:
+                notif_json = {
+                    'episode_id': item['id'],
+                    'user_id': int(request.user.id),
+                    'torrent_url': get_config('GS_URL', '') % (get_config('BUCKET', ''), item['title_slug'] + '.mp4?torrent')
+                }
 
         else:
             r.table('episode').get(item['id']).update({'state': 1}).run(conn)
