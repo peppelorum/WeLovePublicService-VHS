@@ -12,13 +12,11 @@ def convert_timestamp_to_time(timestamp):
 @register.filter('int_to_boostraptable')
 def convert_int_to_boostraptable(num):
 
-    print 'num', num
-
     num = int(num)
 
-    if num == 2:
-        return 'warning'
     if num == 3:
+        return 'warning'
+    if num == 4:
         return 'success'
 
     return ''

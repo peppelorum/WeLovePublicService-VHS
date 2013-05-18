@@ -148,10 +148,13 @@ class Pirateget():
         except IndexError as inst:
             print('JSON-URL: %s' % json)
 
+        sent = requests.post(callback_url, data={'id': pk, 'key': get_config('CALLBACKKEY', ''), 'state': 3})
+        print 'Callback pre-get:', sent
+
         self.getVideo(url, pk, filename)
 
-        sent = requests.post(callback_url, data={'id': pk, 'key': get_config('CALLBACKKEY', '')})
-        print 'Callback:', sent
+        sent = requests.post(callback_url, data={'id': pk, 'key': get_config('CALLBACKKEY', ''), 'state': 4})
+        print 'Callback post-get:', sent
 
         return True
 

@@ -104,6 +104,7 @@ def stats(request):
 def callback(request):
     req_id = request.POST.get('id')
     key = request.POST.get('key')
+    state = request.POST.get('state')
 
     if key != get_config('CALLBACKKEY', ''):
         return HttpResponse('Nay....')
@@ -112,20 +113,22 @@ def callback(request):
 
     item = r.table('episode').get(req_id).run(conn)
 
-    r.table('episode').get(item['id']).update({'state': 3}).run(conn)
+    r.table('episode').get(item['id']).update({'state': state}).run(conn)
 
-    notif_json = {
-        'torrent_url': get_config('GS_URL', '') % (get_config('BUCKET', ''), item['title_slug'] + '.mp4?torrent')
-    }
+    if state == 3:
 
-    episodes = r.table('notifications').filter({'episode_id': req_id}).update(notif_json).run(conn)
+        notif_json = {
+            'torrent_url': get_config('GS_URL', '') % (get_config('BUCKET', ''), item['title_slug'] + '.mp4?torrent')
+        }
 
-    for a in episodes:
-        print a
+        episodes = r.table('notifications').filter({'episode_id': req_id}).update(notif_json).run(conn)
+
+        for a in episodes:
+            print a
 
     return HttpResponse('Yay!')
 
-#
+
 
 
 def rss(request, key):
