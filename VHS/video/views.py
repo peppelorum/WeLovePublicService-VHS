@@ -29,7 +29,7 @@ def start(request):
 
     profile = Profile.objects.get(user=request.user)
 
-    notifications = r.table('notifications').eq_join('episode_id', r.table('episode')).order_by(r.asc('date_added')).run(conn)
+    notifications = r.table('notifications').filter({'user_id': int(request.user.id)}).eq_join('episode_id', r.table('episode')).order_by(r.asc('date_added')).run(conn)
     # downloaded = r.table('notifications').eq_join('episode_id', r.table('episode')).filter(lambda item: item.contains('torrent_url')).order_by(r.asc('date_added')).run(conn)
 
     dic = {
