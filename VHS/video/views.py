@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response, HttpResponse, Http404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.template import RequestContext
+from django.core.management import call_command
 
 from django.contrib.auth.models import User
 
@@ -81,6 +82,8 @@ def get(request):
         raise Http404
 
         pass
+
+    call_command('get')
 
     return redirect('start')
 
