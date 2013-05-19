@@ -24,8 +24,8 @@
         </thead>
         <tbody>
         {% for item in notifications %}
-            {% if item.state == 4 %}
-                {% if item.torrent_url %}
+            {% if item.right.state == 4 %}
+                {% if item.left.torrent_url %}
                     {% include 'video/tr.html' %}
                 {% endif %}
             {% else %}
