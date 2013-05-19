@@ -30,12 +30,10 @@ def start(request):
     profile = Profile.objects.get(user=request.user)
 
     notifications = r.table('notifications').filter({'user_id': int(request.user.id)}).eq_join('episode_id', r.table('episode')).order_by(r.asc('date_added')).run(conn)
-    # downloaded = r.table('notifications').eq_join('episode_id', r.table('episode')).filter(lambda item: item.contains('torrent_url')).order_by(r.asc('date_added')).run(conn)
 
     dic = {
         'notifications': notifications,
         'profile': profile
-        # 'downloaded': downloaded
     }
 
     return render_to_response('video/1.html',
@@ -48,11 +46,6 @@ def get(request):
     url = request.GET.get('url')
 
     conn = r.connect('localhost', 28015, 'wlps')
-
-    # items = r.db('wlps').table('episode').filter(lambda item: item.contains('state')).filter({'state': 2}).run()
-    #
-    # for a in items:
-    #     print a
 
     episode_exists = r.table('episode').filter(lambda item: item.contains('url')).filter({'url': url}).count().run(conn)
 
@@ -158,8 +151,6 @@ def callback(request):
 
 def rss(request, key):
 
-    print 'key', key
-
     conn = r.connect('localhost', 28015, 'wlps')
 
     user = Profile.objects.get(unique=key)
@@ -175,32 +166,3 @@ def rss(request, key):
     }
 
     return render_to_response('video/rss.html', dic, content_type='application/rss+xml')
-
-#
-# from django.contrib.syndication.views import Feed
-# from notifications.models import Notification
-#
-# class LatestEntriesFeed(Feed):
-#     title = "WLPS Your personal torrent feed"
-#     link = "http://sys.welovepublicservice.se/"
-#     # description = ""
-#
-#     # def get_object(self, request, key):
-#     #     return get_object_or_404(Profile, unique=key)
-#
-#     def items(self, obj):
-#         return Notification.objects.filter(recipient=obj.user, actor_content_type__name='episode')
-#
-#     def item_title(self, item):
-#         # return item.actor
-#         return '%s - %s' % (item.actor.show, item.actor)
-#
-#     def item_description(self, item):
-#         return item.description
-#         # return '%s - %s' % (item.show, item.description)
-#
-#     def item_link(self, item):
-#         try:
-#             return item.actor.episode_link_torrent()
-#         except:
-#             pass
