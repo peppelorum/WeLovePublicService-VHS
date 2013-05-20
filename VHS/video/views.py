@@ -49,7 +49,9 @@ def get(request):
 
     episode_exists = r.table('episode').filter(lambda item: item.contains('url')).filter({'url': url}).count().run(conn)
 
-    if episode_exists == 0:
+    print 'episode_exists', episode_exists
+
+    if int(episode_exists) == 0:
         urlbase = 'http://api.welovepublicservice.se/'
         tmpurl = urlbase + 'v1/episode/?url=%s' % (url)
 
