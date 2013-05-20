@@ -33,7 +33,7 @@ except KeyError as inst:
     print inst
     print '*********************************************************'
 
-BUCKET = 'wlps'
+BUCKET = 'wlps-vhs'
 GOOGLE_STORAGE = 's3'
 GS_URL = 'https://s3-eu-west-1.amazonaws.com/%s/%s'
 
