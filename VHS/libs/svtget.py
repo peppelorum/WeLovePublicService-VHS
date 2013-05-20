@@ -93,7 +93,7 @@ class Pirateget():
         filename_gs = filename.split('/')[-1] + '.mp4'
         filename += '.mp4'
         conn = S3Connection(GS_KEY, GS_SECRET)
-        bucket = conn.get_bucket('wlps')
+        bucket = conn.get_bucket('wlps-vhs')
         k = Key(bucket)
         k.key = filename_gs
         k.set_contents_from_filename(tempfilename)
