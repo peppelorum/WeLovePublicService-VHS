@@ -10,6 +10,8 @@ from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
 
 import rethinkdb as r
+import time
+import requests
 from rethinkdb.errors import RqlRuntimeError, RqlDriverError
 
 use_connection()
@@ -20,54 +22,72 @@ current_site = Site.objects.get_current().domain
 callback_url = 'http://vhs.welovepublicservice.se%s' % reverse('ep_callback')
 print callback_url
 
+
+def getjson(url):
+    urlbase = 'http://api.welovepublicservice.se/'
+    tmpurl = urlbase + 'v1/episode/?url=%s' % (url)
+
+    req = requests.get(tmpurl)
+    allt = req.json()
+
+    return allt
+
 class SvtGet():
 
     def __init__(self):
 
         conn = r.connect('localhost', 28015, 'wlps')
+        items = r.table('queue').run(conn)
 
+        for queued in items:
 
-        items = r.table('episode').filter(lambda item: item.contains('state')).filter({'state': 1}).run(conn)
+            url = queued['url']
+            episode_exists = r.table('episode').filter(lambda item: item.contains('url')).filter({'url': url}).count().run(conn)
 
-        for episode in items:
+            if int(episode_exists) == 0:
+                allt = getjson(url)
 
-            # print episode
-            r.table('episode').get(episode['id']).update({'state': 2}).run(conn)
-            # print episode
+                for obj in allt['objects']:
+                    r.db('wlps').table('episode').insert(obj).run(conn)
 
+            episode_exists = r.table('episode').filter(lambda item: item.contains('url')).filter({'url': url}).count().run(conn)
+            if int(episode_exists) != 0:
+
+                episode = r.table('episode').filter(lambda item: item.contains('url')).filter({'url': url}).nth(0).run(conn)
+                r.table('episode').get(episode['id']).update({'state': 2}).run(conn)
+
+                notif_json = {
+                    'episode_id': episode['id'],
+                    'user_id': int(queued['user_id'])
+                }
+                exists = int(r.table('notifications').filter(notif_json).count().run(conn))
+
+                if int(exists) == 0:
+                    notif_json.update(
+                        {
+                            'date_added': int(time.time()),
+                            'user_id': int(queued['user_id'])
+                        })
+
+                if hasattr(episode, 'state'):
+                    if episode['state'] == 4:
+                        notif_json.update(
+                            {
+                                'torrent_url': get_config('GS_URL', '') % (get_config('BUCKET', ''), episode['title_slug'] + '.mp4?torrent'),
+                            }
+                        )
+
+                r.table('notifications').insert(notif_json).run(conn)
+                r.table('queue').get(queued['id']).delete().run(conn)
 
             result = q.enqueue(download, episode['id'], episode['title_slug'], episode['url'], get_config('SVTGETSAVEFOLDER', os.path.join(get_config('PROJECT_DIR', 'FAILED'), 'episodes')), callback_url)
 
 
-
-        # self.episodes = Episode.objects.filter(state=0, http_status=200).exclude(show__profile=None)
-        # self.episodesPreqeued = Episode.objects.filter(state=4, http_status=200)
-        # result_list = list(chain(self.episodes, self.episodesPreqeued))
-        #
-        # for episode in result_list:
-        #     print 'GETTING: ', str(episode.id)
-        #     print 'URL: ', str(episode.url)
-        #
-        #     episode.state = 1
-        #     episode.save()
-        #
-        #     result = q.enqueue(download, episode.id, episode.title_slug, episode.url, get_config('SVTGETSAVEFOLDER', os.path.join(get_config('PROJECT_DIR', 'FAILED'), 'episodes')), callback_url)
-            #
-##            break
-
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        if args != ():
-            episode = Episode.objects.get(id=args[0])
-            print 'GETTING: ', str(episode.id)
-            print 'URL: ', str(episode.url)
-            episode.state = 1
-            episode.save()
-            # result = q.enqueue(download, episode.id, episode.title_slug, episode.url, get_config('SVTGETSAVEFOLDER', os.path.join(get_config('PROJECT_DIR', 'FAILED'), 'episodes')), callback_url)
-        else:
-            self.crawl = SvtGet()
-            self.stdout.write('Yay!')
+        self.crawl = SvtGet()
+        self.stdout.write('Yay!')
 
         self.stdout.write(get_config('SVTGETSAVEFOLDER', 'noo'))
 

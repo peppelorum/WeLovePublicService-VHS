@@ -19,6 +19,12 @@
         </tr>
         </thead>
         <tbody>
+        {% for item in queued %}
+            <tr>
+                <td><a href="{{ item.url }}">{{ item.title }}</a></td>
+                <td></td>
+            </tr>
+        {% endfor %}
         {% for item in notifications %}
             <tr>
                 <td><a href="{{ item.right.url }}">{{ item.right.title }}</a></td>

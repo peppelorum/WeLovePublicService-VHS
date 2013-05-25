@@ -29,6 +29,11 @@ def index():
     except RqlRuntimeError:
         pass
 
+    try:
+        r.db('wlps').table_create('queue').run()
+    except RqlRuntimeError:
+        pass
+
     offset = 0
     limit = 1000
     urlbase = 'http://api.welovepublicservice.se/'

@@ -1,6 +1,7 @@
 # Create your views here.
 
 import time
+import urllib
 
 from django.shortcuts import render_to_response, HttpResponse, Http404, redirect
 from django.contrib.auth.decorators import login_required
@@ -29,9 +30,11 @@ def start(request):
 
     profile = Profile.objects.get(user=request.user)
 
+    queued = r.table('queue').filter({'user_id': int(request.user.id)}).order_by(r.asc('date_added')).run(conn)
     notifications = r.table('notifications').filter({'user_id': int(request.user.id)}).eq_join('episode_id', r.table('episode')).order_by(r.asc('date_added')).run(conn)
 
     dic = {
+        'queued': queued,
         'notifications': notifications,
         'profile': profile
     }
@@ -41,66 +44,27 @@ def start(request):
                               context_instance=RequestContext(request))
 
 
+
 @login_required()
 def get(request):
     url = request.GET.get('url')
+    title = urllib.unquote(request.GET.get('title'))
 
     conn = r.connect('localhost', 28015, 'wlps')
 
-    episode_exists = r.table('episode').filter(lambda item: item.contains('url')).filter({'url': url}).count().run(conn)
-
-    print 'episode_exists', episode_exists
+    episode_exists = r.table('queue').filter(lambda item: item.contains('url')).filter({'url': url}).count().run(conn)
 
     if int(episode_exists) == 0:
-        urlbase = 'http://api.welovepublicservice.se/'
-        tmpurl = urlbase + 'v1/episode/?url=%s' % (url)
 
-        req = requests.get(tmpurl)
-        allt = req.json()
-
-        for obj in allt['objects']:
-            a = r.db('wlps').table('episode').insert(obj).run()
-
-    try:
-        item = r.table('episode').filter(lambda item: item.contains('url')).filter({'url': url}).nth(0).run(conn)
-
-        notif_json = {
-            'episode_id': item['id'],
+        missing = {
+            'url': url,
+            'title': title,
+            'user_id': int(request.user.id),
+            'date_added': int(time.time())
         }
-        exists = int(r.table('notifications').filter(notif_json).count().run(conn))
+        r.db('wlps').table('queue').insert(missing).run(conn)
 
-        if exists == 0:
-            r.table('episode').get(item['id']).update({'state': 1}).run(conn)
-
-        notif_json.update(
-            {
-                'date_added': int(time.time()),
-                'user_id': int(request.user.id)
-            })
-
-        if hasattr(item, 'state'):
-            if item['state'] == 4:
-                notif_json.update(
-                    {
-                        'torrent_url': get_config('GS_URL', '') % (get_config('BUCKET', ''), item['title_slug'] + '.mp4?torrent'),
-                    }
-                )
-
-        r.table('notifications').insert(notif_json).run(conn)
-
-    except ValueError as err:
-        # item = 's'
-        print err
-        pass
-
-    except RqlRuntimeError as err:
-        # item = 's'
-        print err
-        raise Http404
-
-        pass
-
-    call_command('get')
+    # call_command('get')
 
     return redirect('start')
 
