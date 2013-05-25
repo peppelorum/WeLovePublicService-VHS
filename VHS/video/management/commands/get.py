@@ -20,7 +20,7 @@ current_site = Site.objects.get_current().domain
 #callback_url = 'http://%s:%s%s' % (get_config('BROKER_HOST', 'none'), '8000', reverse('ep_callback'))
 # callback_url = 'http://localhost:8000%s' % reverse('ep_callback')
 callback_url = 'http://vhs.welovepublicservice.se%s' % reverse('ep_callback')
-print callback_url
+# print callback_url
 
 
 def getjson(url):
@@ -87,9 +87,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.crawl = SvtGet()
-        self.stdout.write('Yay!')
+        # self.stdout.write('Yay!')
 
-        self.stdout.write(get_config('SVTGETSAVEFOLDER', 'noo'))
+        # self.stdout.write(get_config('SVTGETSAVEFOLDER', 'noo'))
 
 
 
