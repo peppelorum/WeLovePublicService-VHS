@@ -3,6 +3,6 @@
 <tr class="{{ item.right.state|floatformat:"0"|int_to_boostraptable }}">
     <td><a href="{{ item.right.url }}">{{ item.right.title }}</a></td>
     <td>{{ item.right.state|floatformat:"0" }}</td>
-    <td>{{ item.left.date_added|timestamp_to_time|date:"Y-m-d H:i"  }}</td>
+    <td>{{ item.left.date_added|timestamp_to_time|date:"Y-m-d"  }}</td>
     <td>{% if item.left.torrent_url %}<a href="{{ item.left.torrent_url }}">Download</a>{% endif %}</td>
 </tr>
