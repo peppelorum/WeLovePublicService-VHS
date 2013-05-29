@@ -38,6 +38,7 @@ class SvtGet():
 
         conn = r.connect('localhost', 28015, 'wlps')
         items = r.table('queue').run(conn)
+        run = True
 
         for queued in items:
 
@@ -65,8 +66,7 @@ class SvtGet():
                 if int(exists) == 0:
                     notif_json.update(
                         {
-                            'date_added': int(time.time()),
-                            'user_id': int(queued['user_id'])
+                            'date_added': int(time.time())
                         })
 
                 if hasattr(episode, 'state'):
@@ -76,11 +76,13 @@ class SvtGet():
                                 'torrent_url': get_config('GS_URL', '') % (get_config('BUCKET', ''), episode['title_slug'] + '.mp4?torrent'),
                             }
                         )
+                        run = False
 
                 r.table('notifications').insert(notif_json).run(conn)
                 r.table('queue').get(queued['id']).delete().run(conn)
 
-            result = q.enqueue(download, episode['id'], episode['title_slug'], episode['url'], get_config('SVTGETSAVEFOLDER', os.path.join(get_config('PROJECT_DIR', 'FAILED'), 'episodes')), callback_url)
+            if run:
+                result = q.enqueue(download, episode['id'], episode['title_slug'], episode['url'], get_config('SVTGETSAVEFOLDER', os.path.join(get_config('PROJECT_DIR', 'FAILED'), 'episodes')), callback_url)
 
 
 class Command(BaseCommand):
