@@ -38,9 +38,10 @@ class SvtGet():
 
         conn = r.connect('localhost', 28015, 'wlps')
         items = r.table('queue').run(conn)
-        run = True
 
         for queued in items:
+
+            run = True
 
             url = queued['url']
             episode_exists = r.table('episode').filter(lambda item: item.contains('url')).filter({'url': url}).count().run(conn)
@@ -81,8 +82,8 @@ class SvtGet():
                 r.table('notifications').insert(notif_json).run(conn)
                 r.table('queue').get(queued['id']).delete().run(conn)
 
-            if run:
-                result = q.enqueue(download, episode['id'], episode['title_slug'], episode['url'], get_config('SVTGETSAVEFOLDER', os.path.join(get_config('PROJECT_DIR', 'FAILED'), 'episodes')), callback_url)
+                if run:
+                    result = q.enqueue(download, episode['id'], episode['title_slug'], episode['url'], get_config('SVTGETSAVEFOLDER', os.path.join(get_config('PROJECT_DIR', 'FAILED'), 'episodes')), callback_url)
 
 
 class Command(BaseCommand):
